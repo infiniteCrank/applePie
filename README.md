@@ -1,5 +1,5 @@
 # applePie
 apple pie pairs art with music
 
-#to run project use following command
+# To run project 
 ```odin run . ```
