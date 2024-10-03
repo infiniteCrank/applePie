@@ -1,13 +1,15 @@
 window.addEventListener("load", (event) => {
     const mainElement = document.getElementById("main");
     var mainHeader = document.createElement("h1")
-    mainHeader.innerHTML = "Welcome to Apple Pie!"
     mainElement.appendChild(mainHeader)
 
     getJQuery()
-    Promise.all([getJQuery()]).then(values => {
+    Promise.all([getJQuery(),Promise.resolve(3)]).then(values => {
         console.log(values)
+        mainHeader.innerHTML = values[0]
+        mainElement.innerHTML += values[1]
     })
+
     
 });
 
