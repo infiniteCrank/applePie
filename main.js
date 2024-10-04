@@ -20,6 +20,7 @@ function generateTerminal(mainElement){
     terminal.style.padding = "5px"
     terminal.style.display = "inline-block"
     terminal.style.fontFamily = '"Lucida Console", monospace'
+    terminal.style.overflowY = "scroll"
     terminal.innerHTML = terminalBuffer
     terminal.tabIndex = 0
     terminal.id = "terminal"
@@ -44,6 +45,9 @@ function getInput(event){
             terminal.innerHTML = terminalBuffer
             break;
         case "Enter":
+            terminalBuffer += "<br> ApplePie@home % "
+            terminal.innerHTML = terminalBuffer
+            terminal.scrollTop = terminal.scrollHeight
             break;
         case " ":
             terminalBuffer += "&nbsp;"
