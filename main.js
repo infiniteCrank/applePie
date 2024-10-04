@@ -1,3 +1,4 @@
+var terminalBuffer = "ApplePie@home % Welcome to Apple Pie! <br> ApplePie@home % "
 window.addEventListener("load", (event) => {
     const mainElement = document.getElementById("main");
     var mainHeader = document.createElement("h1")
@@ -19,7 +20,7 @@ function generateTerminal(mainElement){
     terminal.style.padding = "5px"
     terminal.style.display = "inline-block"
     terminal.style.fontFamily = '"Lucida Console", monospace'
-    terminal.innerHTML = "ApplePie@home % Welcome to Apple Pie! <br> ApplePie@home % "
+    terminal.innerHTML = terminalBuffer
     terminal.tabIndex = 0
     terminal.id = "terminal"
     terminal.addEventListener("keyup",getInput)
@@ -35,19 +36,66 @@ function getInput(event){
         case "Shift":
             break;
         case "Backspace":
-            var lastEightChars = terminal.innerHTML.slice(terminal.innerHTML.length - 8, terminal.innerHTML.length)
-            console.log(lastEightChars)
-            if(lastEightChars !== "@home % ") {
-                terminal.innerHTML = terminal.innerHTML.slice(0, -1)
-            }
+            var lastChar = terminalBuffer[terminalBuffer.length - 1]
+            var sliceAmount = -1
+            if(lastChar === ";") sliceAmount = detectEncodedChar();
+            if(detectTerminal()) break;
+            terminalBuffer = terminalBuffer.slice(0, sliceAmount);
+            terminal.innerHTML = terminalBuffer
             break;
         case "Enter":
             break;
+        case " ":
+            terminalBuffer += "&nbsp;"
+            terminal.innerHTML = terminalBuffer 
+            break;
+        case "<":
+            terminalBuffer += "&lt;"
+            terminal.innerHTML = terminalBuffer 
+            break;
+        case ">":
+            terminalBuffer += "&gt;"
+            terminal.innerHTML = terminalBuffer 
+            break;
+        case "&":
+            terminalBuffer += "&amp;"
+            terminal.innerHTML = terminalBuffer 
+            break;
+        case "'":
+            terminalBuffer += "&apos;"
+            terminal.innerHTML = terminalBuffer 
+            break;    
+        case '"':
+            terminalBuffer += "&quot;"
+            terminal.innerHTML = terminalBuffer 
+            break;       
         default:
-            terminal.innerHTML += document.createTextNode(event.key).textContent
+            terminalBuffer += document.createTextNode(event.key).textContent
+            terminal.innerHTML = terminalBuffer 
     }
-    
+    console.log(terminalBuffer)
     addCursor(terminal)
+}
+
+function detectTerminal(){
+    var lastFour = terminalBuffer.slice(terminalBuffer.length-8)
+    return (lastFour === "@home % ")
+}
+
+function detectEncodedChar(){
+    var charCount = 0
+    for (let i = terminalBuffer.length - 1; i >= 0; i--) {
+        charCount++
+        if(terminalBuffer[i] === "&"){
+            i=-1
+        }
+        if(charCount>7){
+            charCount = 1
+            i=-1
+        }
+
+    }
+    return (charCount *-1)
 }
 
 function addCursor(terminal){
