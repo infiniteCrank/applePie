@@ -1,4 +1,9 @@
-var terminalBuffer = "ApplePie@home % Welcome to Apple Pie! <br> ApplePie@home % "
+
+const terminalData = {
+    terminalBuffer: "ApplePie@home:cli % Welcome to Apple Pie! <br> ApplePie@home:cli % ",
+    terminalMode: "cli"
+}
+
 window.addEventListener("load", (event) => {
     const mainElement = document.getElementById("main");
     var mainHeader = document.createElement("h1")
@@ -21,7 +26,7 @@ function generateTerminal(mainElement){
     terminal.style.display = "inline-block"
     terminal.style.fontFamily = '"Lucida Console", monospace'
     terminal.style.overflowY = "scroll"
-    terminal.innerHTML = terminalBuffer
+    terminal.innerHTML = terminalData.terminalBuffer
     terminal.tabIndex = 0
     terminal.id = "terminal"
     terminal.addEventListener("keyup",getInput)
@@ -37,60 +42,60 @@ function getInput(event){
         case "Shift":
             break;
         case "Backspace":
-            var lastChar = terminalBuffer[terminalBuffer.length - 1]
+            var lastChar = terminalData.terminalBuffer[terminalBuffer.length - 1]
             var sliceAmount = -1
             if(lastChar === ";") sliceAmount = detectEncodedChar();
             if(detectTerminal()) break;
-            terminalBuffer = terminalBuffer.slice(0, sliceAmount);
-            terminal.innerHTML = terminalBuffer
+            terminalData.terminalBuffer = terminalData.terminalBuffer.slice(0, sliceAmount);
+            terminal.innerHTML = terminalData.terminalBuffer
             break;
         case "Enter":
-            terminalBuffer += "<br> ApplePie@home % "
-            terminal.innerHTML = terminalBuffer
+            terminalData.terminalBuffer += "<br> ApplePie@home"+terminalData.terminalMode+" % "
+            terminal.innerHTML = terminalData.terminalBuffer
             terminal.scrollTop = terminal.scrollHeight
             break;
         case " ":
-            terminalBuffer += "&nbsp;"
-            terminal.innerHTML = terminalBuffer 
+            terminalData.terminalBuffer += "&nbsp;"
+            terminal.innerHTML = terminalData.terminalBuffer 
             break;
         case "<":
-            terminalBuffer += "&lt;"
-            terminal.innerHTML = terminalBuffer 
+            terminalData.terminalBuffer += "&lt;"
+            terminal.innerHTML = terminalData.terminalBuffer 
             break;
         case ">":
-            terminalBuffer += "&gt;"
-            terminal.innerHTML = terminalBuffer 
+            terminalData.terminalBuffer += "&gt;"
+            terminal.innerHTML = terminalData.terminalBuffer 
             break;
         case "&":
-            terminalBuffer += "&amp;"
-            terminal.innerHTML = terminalBuffer 
+            terminalData.terminalBuffer += "&amp;"
+            terminal.innerHTML = terminalData.terminalBuffer 
             break;
         case "'":
-            terminalBuffer += "&apos;"
-            terminal.innerHTML = terminalBuffer 
+            terminalData.terminalBuffer += "&apos;"
+            terminal.innerHTML = terminalData.terminalBuffer 
             break;    
         case '"':
-            terminalBuffer += "&quot;"
-            terminal.innerHTML = terminalBuffer 
+            terminalData.terminalBuffer += "&quot;"
+            terminal.innerHTML = terminalData.terminalBuffer 
             break;       
         default:
-            terminalBuffer += document.createTextNode(event.key).textContent
+            terminalData.terminalBuffer += document.createTextNode(event.key).textContent
             terminal.innerHTML = terminalBuffer 
     }
-    console.log(terminalBuffer)
+    console.log(terminalData.terminalBuffer)
     addCursor(terminal)
 }
 
 function detectTerminal(){
-    var lastFour = terminalBuffer.slice(terminalBuffer.length-8)
-    return (lastFour === "@home % ")
+    var lastFour = terminalData.terminalBuffer.slice(terminalData.terminalBuffer.length-8)
+    return (lastFour === "@home"+terminalData.terminalMode+" % ")
 }
 
 function detectEncodedChar(){
     var charCount = 0
-    for (let i = terminalBuffer.length - 1; i >= 0; i--) {
+    for (let i = terminalData.terminalBuffer.length - 1; i >= 0; i--) {
         charCount++
-        if(terminalBuffer[i] === "&"){
+        if(terminalData.terminalBuffer[i] === "&"){
             i=-1
         }
         if(charCount>7){
