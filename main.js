@@ -55,8 +55,7 @@ function getInput(event){
             break;
         case "Enter":
             var cmd = parseCommand()
-            var foo = runCommand(cmd)
-            if (typeof(foo) !== "undefined") foo()
+            runCommand(cmd)
             terminal.scrollTop = terminal.scrollHeight
             break;
         case " ":
@@ -101,22 +100,20 @@ function parseCommand(){
 }
 
 function runCommand(cmd){
-    var terminal = terminalData.getTerminal()
-    return ((cmd.indexOf("help") >= 0) || (cmd.indexOf("Help") >= 0)) ? applePieHelp(cmd):
-    ((cmd.indexOf("info") >= 0) || (cmd.indexOf("Info") >= 0)) ? applePieInfo(cmd):
-    ()=>{
-        terminalData.terminalBuffer += errorState("unknown command", cmd)
-        terminal.innerHTML = terminalData.terminalBuffer
-    }
     
+    return ((cmd.indexOf("help") >= 0) || (cmd.indexOf("Help") >= 0)) ? applePieHelp(cmd):
+           ((cmd.indexOf("info") >= 0) || (cmd.indexOf("Info") >= 0)) ? applePieInfo(cmd):
+    errorState("unknown command", cmd)
     
 }
 
 function errorState(err,cmd){
+    var terminal = terminalData.getTerminal()
     errorString = "<br> >> Apple Pie has encountered an error: " 
     errorString += err + " with the following command:" + cmd + "<br>"
     errorString += terminalNewLine
-    return errorString
+    terminalData.terminalBuffer += errorString
+    terminal.innerHTML = terminalData.terminalBuffer
 }
 
 function detectTerminal(){
