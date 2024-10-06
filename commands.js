@@ -1,5 +1,5 @@
 function applePieHelp(cmd) {
-    var msg = "foo bar is the way dude. but apple pie is king. what do you need help with? <br>"
+    var msg = "foo bar is the way. but apple pie is king. what do you need help with? <br>"
     msg += "Type help -c to see a list of commands available <br>"
     msg += "Type help -a to get help with your account or create an account <br>"
     readAloud(msg)
