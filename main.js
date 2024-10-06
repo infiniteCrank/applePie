@@ -1,8 +1,12 @@
 
 const terminalData = {
     terminalBuffer: "ApplePie@home:cli % Welcome to Apple Pie! <br> ApplePie@home:cli % ",
-    terminalMode: "cli"
+    terminalMode: "cli",
+    getTerminal: ()=>{ return document.getElementById("terminal")}
 }
+
+var terminalNewLine = "<br> ApplePie@home:" + terminalData.terminalMode + " % "
+var terminalOutPut = "<br> >> "
 
 window.addEventListener("load", (event) => {
     const mainElement = document.getElementById("main");
@@ -36,13 +40,13 @@ function generateTerminal(mainElement){
 }
 
 function getInput(event){
-    var terminal = document.getElementById("terminal")
+    var terminal = terminalData.getTerminal()
     document.getElementById("cursor").remove()
     switch (event.key){
         case "Shift":
             break;
         case "Backspace":
-            var lastChar = terminalData.terminalBuffer[terminalBuffer.length - 1]
+            var lastChar = terminalData.terminalBuffer[terminalData.terminalBuffer.length - 1]
             var sliceAmount = -1
             if(lastChar === ";") sliceAmount = detectEncodedChar();
             if(detectTerminal()) break;
@@ -50,8 +54,8 @@ function getInput(event){
             terminal.innerHTML = terminalData.terminalBuffer
             break;
         case "Enter":
-            terminalData.terminalBuffer += "<br> ApplePie@home"+terminalData.terminalMode+" % "
-            terminal.innerHTML = terminalData.terminalBuffer
+            var cmd = parseCommand()
+            runCommand(cmd)
             terminal.scrollTop = terminal.scrollHeight
             break;
         case " ":
@@ -80,15 +84,44 @@ function getInput(event){
             break;       
         default:
             terminalData.terminalBuffer += document.createTextNode(event.key).textContent
-            terminal.innerHTML = terminalBuffer 
+            terminal.innerHTML = terminalData.terminalBuffer 
     }
-    console.log(terminalData.terminalBuffer)
     addCursor(terminal)
+    console.log("BUFFER: " + terminalData.terminalBuffer)
+}
+
+function parseCommand(){
+    var command = terminalData.terminalBuffer
+    var lastNewLineIndex = command.lastIndexOf(terminalNewLine)
+    var commandIndex = lastNewLineIndex + terminalNewLine.length
+    command = command.slice(commandIndex,command.length)
+    console.log("command: " + command)
+    return command
+}
+
+function runCommand(cmd){
+    var terminal = terminalData.getTerminal()
+    return ((cmd.indexOf("help") >= 0) || (cmd.indexOf("Help") >= 0)) ? applePieHelp(cmd):
+    ((cmd.indexOf("info") >= 0) || (cmd.indexOf("Info") >= 0)) ? applePieInfo(cmd):
+    ()=>{
+        terminalData.terminalBuffer += errorState("unknown command", cmd)
+        terminal.innerHTML = terminalData.terminalBuffer
+    }
+    
+    
+}
+
+function errorState(err,cmd){
+    errorString = "<br> >> Apple Pie has encountered an error: " 
+    errorString += err + " with the following command:" + cmd + "<br>"
+    errorString += terminalNewLine
+    return errorString
 }
 
 function detectTerminal(){
-    var lastFour = terminalData.terminalBuffer.slice(terminalData.terminalBuffer.length-8)
-    return (lastFour === "@home"+terminalData.terminalMode+" % ")
+    var last12 = terminalData.terminalBuffer.slice(terminalData.terminalBuffer.length-12)
+    console.log(last12)
+    return (last12 === "@home:"+terminalData.terminalMode+" % ")
 }
 
 function detectEncodedChar(){
