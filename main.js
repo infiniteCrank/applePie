@@ -55,7 +55,8 @@ function getInput(event){
             break;
         case "Enter":
             var cmd = parseCommand()
-            runCommand(cmd)
+            var foo = runCommand(cmd)
+            if (typeof(foo) !== "undefined") foo()
             terminal.scrollTop = terminal.scrollHeight
             break;
         case " ":
