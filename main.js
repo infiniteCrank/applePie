@@ -56,6 +56,8 @@ function getInput(event){
         case "Enter":
             var cmd = parseCommand()
             runCommand(cmd)
+            terminalData.terminalBuffer += terminalNewLine
+            terminal.innerHTML = terminalData.terminalBuffer
             terminal.scrollTop = terminal.scrollHeight
             break;
         case " ":
@@ -111,7 +113,7 @@ function errorState(err,cmd){
     var terminal = terminalData.getTerminal()
     errorString = "<br> >> Apple Pie has encountered an error: " 
     errorString += err + " with the following command:" + cmd + "<br>"
-    errorString += terminalNewLine
+    readAloud(errorString)
     terminalData.terminalBuffer += errorString
     terminal.innerHTML = terminalData.terminalBuffer
 }
