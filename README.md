@@ -1,4 +1,4 @@
 # applePie
-apple pie pairs art with music
+apple pie teaches you to code
 
 # To run project 
