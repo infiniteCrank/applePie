@@ -43,6 +43,10 @@ function getInput(event){
     var terminal = terminalData.getTerminal()
     document.getElementById("cursor").remove()
     switch (event.key){
+        case "":
+            terminalData.terminalBuffer += terminalNewLine
+            terminal.innerHTML = terminalData.terminalBuffer
+            break
         case "Shift":
             break;
         case "Backspace":
